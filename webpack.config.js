@@ -7,12 +7,11 @@ const webpack = require('webpack')
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-
 let config = {
   devtool: '#eval-source-map',
-  // eslint: {
-  //   formatter: require('eslint-friendly-formatter')
-  // },
+  eslint: {
+    formatter: require('eslint-friendly-formatter')
+  },
   entry: {
     build: path.join(__dirname, 'app/src/main.js')
   },

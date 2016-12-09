@@ -18,7 +18,7 @@
 
 <template>
   <div class="">
-    <Title/>
+    <VTitle/>
     <section class="list-tools">
       <md-card  md-with-hover v-for="tool in tools" @click.native="toTools(tool.link)">
           <md-card-media-cover md-text-scrim>
@@ -43,10 +43,10 @@
 </template>
 
 <script>
-import Title from './LandingPageView'
+import VTitle from './LandingPageView'
 export default {
   components: {
-    Title,
+    VTitle,
   },
   data () {
     return {

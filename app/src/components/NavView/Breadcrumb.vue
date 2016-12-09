@@ -9,11 +9,15 @@
     vertical-align: bottom;
   }
 
-  p { line-height: 24px; }
+  p { line-height: 24px;
+      position: absolute;
+      right: 0;
+      top: 10px;
+      z-index: 1000; }
 </style>
 
 <template>
   <p>
-    返回 <a href="/">主界面</a>
+    <md-button href="#/" class="md-raised"><md-icon class="md-primary">home</md-icon>返回主界面</md-button>
   </p>
 </template>

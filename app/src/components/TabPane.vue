@@ -11,7 +11,7 @@
 
 <script>
   import VNav from './VNav'
-  import Breadcrumb from './NavView/CurrentPage'
+  import Breadcrumb from './NavView/Breadcrumb'
 
   export default {
     components: {

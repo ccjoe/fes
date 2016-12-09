@@ -18,9 +18,9 @@
     "unit": "karma start test/unit/karma.conf.js",
     "vue:route": "node tasks/vue/route.js",
     "vuex:module": "node tasks/vuex/module.js",
-    "postinstall": "npm run lint:fix && cd app && npm install"
+    "postinstall": "cd app && npm install"
   },
-  "author": "Greg Holguin <simulatedgreg@gmail.com>",
+  "author": "Joe Liu <icareu.joe@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.8.0",
@@ -71,6 +71,8 @@
     "vue-html-loader": "^1.2.2",
     "vue-loader": "^9.5.1",
     "vue-style-loader": "^1.0.0",
+    "node-sass": "^3.4.1",
+    "sass-loader": "^3.1.2",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1",
     "webpack-merge": "^0.14.1"

@@ -9,7 +9,7 @@
 
 <script>
 const ace = require('brace');
-require('brace/mode/javascript');
+require('./ace-host.js');
 require('brace/theme/monokai');
 
 export default {
@@ -20,7 +20,7 @@ export default {
     },
     lang: {
       type: String,
-      default: 'javascript'
+      default: 'host'
     },
     theme: {
       type: String,

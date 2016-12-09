@@ -1,5 +1,5 @@
 <template>
-  <md-tabs md-fixed>
+  <md-tabs>
     <md-tab :md-label="tool.name"  :md-icon="tool.icon" v-for="tool in openTools">
       <Host/>
     </md-tab>
@@ -17,10 +17,10 @@ export default {
         openTools: [{
           name: 'host工具',
           icon: 'ondemand_video'
-        },{
+        }/*,{
           name: '字符串编码',
           icon: 'ondemand_video'
-        }]
+        }*/]
       }
   },
   methods:{
