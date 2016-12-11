@@ -1,12 +1,11 @@
 <style>
   .host-area, .host-editor{
     display: flex;
-    //height: 100%!important;
   }
   .host-sidebar{
-    flex: none!important;
-    -webkit-box-flex: 0!important;
-    width: 30%!important;
+    flex: none;
+    -webkit-box-flex: 0;
+    width: 30%;
   }
   .host-editor{
     flex:1;
@@ -18,8 +17,9 @@
 </style>
 <template>
     <div class="host-area">
-      <HostMng class="host-sidebar" :height="heightSideScroll" :hostdata="hosts" :originlines="originlines" ref="side"/>
-      <HostEdit class="host-editor" :height="heightEditScroll" :content.sync="content"/>
+    
+      <HostMng class="host-sidebar" :height="heightSideScroll" :hostdata.sync="hosts" :originlines="originlines" ref="side"/>
+      <HostEdit class="host-editor" :height="heightEditScroll" :content.sync="content" ref="editor"/>
     </div>
 </template>
 
@@ -35,8 +35,8 @@ export default {
     return {
       content: '',
       hosts: [],
-      heightEditScroll: '730px',
-      heightSideScroll: '730px'
+      heightEditScroll: '',
+      heightSideScroll: ''
     }
   },
   mounted: function () {
@@ -56,13 +56,17 @@ export default {
       this.content = hostData.texts //edit show
       this.hosts = hostData.lines   //mng show
       this.originlines = hostData.originLines //mng for write
+      // console.log(this.hosts)
     },
     setHeight(){
       var tabContentHeight = document.documentElement.clientHeight - 88;
       this.heightEditScroll = (tabContentHeight - 20) + 'px'
       this.heightSideScroll = (tabContentHeight - 20 - 64) + 'px'
-      var $target = document.getElementsByClassName('md-tabs-content');
-      if($target && $target.length) $target[0].style.height = tabContentHeight + 'px'
+      /*var $target = document.getElementsByClassName('ace_content');
+      if($target && $target.length){
+        setTimeout(()=> {$target[0].style.height = tabContentHeight + 'px'}, 200)
+        console.log($target, tabContentHeight)
+      }*/
     }
   }
 }

@@ -3,7 +3,7 @@
  * host comments
  * # row comments
  * #==== Host Group comments [mutil-row] ====# group host block
- * #HIDE-ALL-OF-BELOW [mutil-row] ====#  host block do not manage
+ * #=HIDE-ALL-OF-BELOW [mutil-row] ====#  host block do not manage
  */
 const fs = require('fs')
 const once = require('once')
@@ -13,7 +13,7 @@ const _ = require('lodash')
 
 const WINDOWS = process.platform === 'win32'
 const EOL = WINDOWS ? '\r\n' : '\n'
-const HOSTS = 'D:/Users/sfliu/Desktop/hosts' || (WINDOWS ? 'C:/Windows/System32/drivers/etc/hosts' : '/etc/hosts')
+const HOSTS = '/Users/shaofengliu/Desktop/hosts' || (WINDOWS ? 'C:/Windows/System32/drivers/etc/hosts' : '/etc/hosts')
 
 /**
  * get hostfile|path text sync
@@ -32,12 +32,15 @@ const loadHost = function (path) {
  * @param  {function(Error)=} cb
  */
 const saveHost = function (lines, cb) {
-  lines = lines.map(function (line, lineNum) {
-    return line + (lineNum === lines.length - 1 ? '' : EOL)
-  })
+  const isstr = typeof lines === 'string'
+  if(!isstr){
+    lines = lines.map(function (line, lineNum) {
+      return line + (lineNum === lines.length - 1 ? '' : EOL)
+    })
+  }
   if (typeof cb !== 'function') {
     var stat = fs.statSync(HOSTS)
-    fs.writeFileSync(HOSTS, lines.join(''), { mode: stat.mode })
+    fs.writeFileSync(HOSTS, isstr?lines:lines.join(''), { mode: stat.mode })
     return true
   }
 
@@ -57,7 +60,6 @@ const saveHost = function (lines, cb) {
   })
 }
 
-
 /**
  * Get a list of the lines that make up the path. If the
  * `comments` parameter is true, then include comments, blank lines
@@ -71,7 +73,7 @@ const saveHost = function (lines, cb) {
  * @example return: {
     lines: ['text', {ip:x, host:x, index:0, switcher:true}, .....],
     texts: 'file content',
-    originLines:'origin Line Content'
+    originLines:'origin Line text Content'
  } */
 const fileByLine = function (path, commentsHost, commentsText, cb) {
   var lines = [], originLines=[], texts = ''
@@ -125,12 +127,45 @@ const get = function (commentsHost, commentsText, cb) {
 }
 
 /**
+ * 查找markA - markB间的内容
+ */
+const lineByMark = function (lines, markA, markB) {
+  var indexes = [], status;
+  if(!markB)  markB = markA;
+  var cma = markA, cmb = markB;
+  lines.forEach((line, index) => {
+    if (_.startsWith(_.trim(line), markA)) {
+      indexes.push(index)
+      status = !status
+      markA = status ? cmb : cma;
+    }
+  })
+  return indexes;
+}
+
+/**
+ * 获取不受管理的模块
+ */
+const hostBanMng = function (lines) {
+  return lineByMark(lines, '#==== HIDE_ALL_OF_INNER', '#====');
+}
+
+/**
  * Get Host By Domain
  * @param  {Object}   lines
  * @return {Object}  {domain: [hostArray]}
  */
 const hostByDomain = function (lines) {
-  var group = _.groupBy(lines, line => line.host)
+  var banIndexes = hostBanMng(lines)
+  var group = _.groupBy(lines, line => {
+    if(!(banIndexes && banIndexes.length && line.index<=banIndexes[1] && line.index >= banIndexes[0])){
+      return line.host
+    }
+  })
+  for(var k in group){
+    let selected = _.findLast(group[k], item => item.switcher)
+    group[k]['selected'] = selected && selected.ip;
+  }
   delete group.undefined
   return group
 }
@@ -146,28 +181,30 @@ const hostByDomain = function (lines) {
  * #====
  */
 const hostByGroup = function (lines) {
-  var groups = [], groupsIndex = [], list, switcher, mark = '#===='
-  _.forEach(lines, (line, index) => {
-    if (_.startsWith(_.trim(line), mark)) {
-      groupsIndex.push(index)
-    }
-  })
+  var groups = [], list, name, switcher, startLine, mark = '#===='
+  var groupsIndex = lineByMark(lines, mark);
   var departGroup = _.chunk(groupsIndex, 2).forEach((section, index) => {
-    var startLine = lines[section[0]]
-    section[0]++
-    var name = _.trim(startLine.replace(mark, ''))
+    startLine = lines[section[0]]; section[0]++;
+    name = _.trim(startLine.replace(mark, ''))
     list = _.slice(lines, section[0], section[1])
-    var switcher = true
-    _.find(list, function (item) {
-      if (!item.switcher) switcher = item.switcher
+    
+    switcher = true; _.find(list, function (item) {
+      if (item.host && item.ip && !item.switcher) switcher = false
     })
-    groups.push({name, list, section, switcher})
+    //remove group host list is not object item{ip:,host:,index:}, is comments or blank
+    _.remove(list, function(item) {
+      return typeof item === 'string';
+    });
+    if(!_.startsWith(_.trimStart(name), 'HIDE_ALL_OF_INNER')){
+      groups.push({name, list, section, switcher})
+    }
   })
   return groups
 }
 
+
 /**
- * toggle host by switcher
+ * toggle host by host
  */
 const toggleHost = function (host, originLines, cb) {
   var originText = _.trimStart(originLines[host.index]),
@@ -180,10 +217,14 @@ const toggleHost = function (host, originLines, cb) {
   saveHost(originLines, cb)
 }
 
-
-const toggleGroup = function (list) {
-  console.log(list, 'list')
+/**
+ * toggle Host By Hosts/Group
+ */
+const toggleHosts = function (hosts, originLines, cb) {
+  hosts.forEach((host) => toggleHost(host, originLines))
+  saveHost(originLines, cb)
 }
+
 
 const getGroup = function () {
 
@@ -272,7 +313,7 @@ export default {
   loadHost,
   saveHost,
   toggleHost,
-  toggleGroup,
+  toggleHosts,
   get,
   set,
   hostByGroup,

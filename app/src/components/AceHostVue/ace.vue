@@ -37,6 +37,10 @@ export default {
     sync: {
       type: Boolean,
       default: false
+    },
+    onsave:{
+      type: Function,
+      default: function(){}
     }
   },
 
@@ -58,20 +62,34 @@ export default {
     editor.on('change', function () {
       vm.$parent.$emit('editor-update', editor.getValue());
     });
+    editor.commands.addCommand({
+      name: 'saveFile',
+      bindKey: {
+        win: 'Ctrl-S',
+        mac: 'Command-S',
+        sender: 'editor|cli'
+      },
+      exec: function(env, args, request) {
+        vm.onsave()
+      }
+    });
+    // this.editor.resize(true)
   },
 
   watch: {
     content: function (newContent) {
-      const vm = this;
-      if (vm.sync) {
-        vm.editor.setValue(newContent, 1);
+      if (this.sync) {
+        this.editor.setValue(newContent, 1);
       }
     },
 
     theme: function (newTheme) {
-      const vm = this;
-      vm.editor.setTheme('ace/theme/' + newTheme);
-    }
+      this.editor.setTheme('ace/theme/' + newTheme);
+    }/*,
+
+    height: function (nw) {
+      this.editor.resize(true)
+    }*/
   }
 };
 </script>
