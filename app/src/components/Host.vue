@@ -17,9 +17,14 @@
 </style>
 <template>
     <div class="host-area">
-    
       <HostMng class="host-sidebar" :height="heightSideScroll" :hostdata.sync="hosts" :originlines="originlines" ref="side"/>
       <HostEdit class="host-editor" :height="heightEditScroll" :content.sync="content" ref="editor"/>
+      <md-dialog-alert class="host-help" :md-title="dialogTitle"
+        :md-content-html="dialogContent"
+        @open="onOpen"
+        @close="onClose"
+        ref="dialog">
+      </md-dialog-alert>
     </div>
 </template>
 
@@ -27,6 +32,27 @@
 import doHost from '../utils/host'
 import HostMng from './HostView/HostMng'
 import HostEdit from './HostView/HostEdit'
+const titlewiki = 'host file wiki'
+const hostwiki = `
+<div class="host-tips">
+<h5>1.row comments </h5>
+<hr><pre>#127.0.0.1 localhost #注释</pre><hr>
+
+<h5>2. Host Group comments </h5>
+<hr><pre>#====
+127.0.0.1 localhost
+127.0.0.2 test.com
+====# </pre><hr>
+
+<h5>3. host block do not manage </h5>
+<hr><pre>#==== HIDE-ALL-OF-INNER
+127.0.0.3 test3.com
+127.0.0.4 test4.com
+#====</pre><hr></div>
+<div class="key-tips">
+  <h5> editor keymap see: <a href="https://ace.c9.io/">https://ace.c9.io/</a></h5>
+</div>`
+
 export default {
   components: {
     HostMng, HostEdit
@@ -35,8 +61,11 @@ export default {
     return {
       content: '',
       hosts: [],
+      originlines: [],
       heightEditScroll: '',
-      heightSideScroll: ''
+      heightSideScroll: '',
+      dialogTitle: titlewiki,
+      dialogContent: hostwiki
     }
   },
   mounted: function () {
@@ -52,11 +81,16 @@ export default {
   },
   methods:{
     updateFile(){
-      var hostData = doHost.get(true, true)
-      this.content = hostData.texts //edit show
-      this.hosts = hostData.lines   //mng show
-      this.originlines = hostData.originLines //mng for write
-      // console.log(this.hosts)
+      var vm = this
+      var hostData = doHost.get(true, true, ({lines, texts, originLines}) => {
+        if(lines.code){
+          vm.openDialog('dialog', 'File Not Find', lines.message)
+          return;
+        }
+        vm.content = texts //edit show
+        vm.hosts = lines   //mng show
+        vm.originlines = originLines //mng for write
+      })
     },
     setHeight(){
       var tabContentHeight = document.documentElement.clientHeight - 88;
@@ -67,6 +101,20 @@ export default {
         setTimeout(()=> {$target[0].style.height = tabContentHeight + 'px'}, 200)
         console.log($target, tabContentHeight)
       }*/
+    },
+    openDialog(ref, title, content) {
+      this.dialogTitle = title || titlewiki
+      this.dialogContent = content || hostwiki
+      this.$refs[ref].open();
+    },
+    closeDialog(ref) {
+      this.$refs[ref].close();
+    },
+    onOpen() {
+      console.log('Opened');
+    },
+    onClose(type) {
+      console.log('Closed', type);
     }
   }
 }

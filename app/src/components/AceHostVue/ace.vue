@@ -11,6 +11,7 @@
 const ace = require('brace');
 require('./ace-host.js');
 require('brace/theme/monokai');
+require('brace/ext/searchbox')
 
 export default {
   props: {
@@ -59,20 +60,30 @@ export default {
     editor.getSession().setMode('ace/mode/' + lang);
     editor.setTheme('ace/theme/' + theme);
     editor.setValue(vm.content, 1);
+    editor.setShowPrintMargin(false);
     editor.on('change', function () {
       vm.$parent.$emit('editor-update', editor.getValue());
     });
-    editor.commands.addCommand({
+    editor.commands.addCommand([{
       name: 'saveFile',
       bindKey: {
         win: 'Ctrl-S',
-        mac: 'Command-S',
-        sender: 'editor|cli'
+        mac: 'Command-S'
       },
       exec: function(env, args, request) {
         vm.onsave()
       }
-    });
+    }, {
+        name: "find",
+        bindKey: {
+          win: 'Ctrl-F',
+          mac: 'Command-F',
+        },
+        exec: function(editor) {
+            config.loadModule("brace/ext/searchbox", function(e) {e.Search(editor)});
+        },
+        readOnly: true
+    }]);
     // this.editor.resize(true)
   },
 

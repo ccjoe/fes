@@ -39,14 +39,16 @@
           </md-card-media-cover>
       </md-card>
     </section>
+    <CopyRight/>
   </div>
 </template>
 
 <script>
-import VTitle from './LandingPageView'
+import VTitle from './Title'
+import CopyRight from './NavView/CopyRight'
 export default {
   components: {
-    VTitle,
+    VTitle, CopyRight
   },
   data () {
     return {
@@ -66,7 +68,7 @@ export default {
             md5:{},
             html2js:{}
           },
-          img: require('./assets/card-sky.jpg')
+          // img: require('./assets/card-sky.jpg')
       }, {
           name: '格式化',
           desc: 'html, css, js格式化',
@@ -76,7 +78,7 @@ export default {
             JSON:{},
             XML:{}
           },
-          img: require('./assets/card-sky.jpg')
+          // img: require('./assets/card-sky.jpg')
       }, {
           name: '代码压缩',
           desc: 'html, css, js代码压缩',
@@ -86,7 +88,7 @@ export default {
             css:{},
             js:{}
           },
-          img: require('./assets/card-sky.jpg')
+          // img: require('./assets/card-sky.jpg')
       }, {
           name: '语法检查',
           desc: 'html, css, js语法检查',
@@ -96,22 +98,22 @@ export default {
             css:{},
             js:{}
           },
-          img: require('./assets/card-sky.jpg')
+          // img: require('./assets/card-sky.jpg')
       }, {
           name: '二维码工具',
           desc: '二维码生成器',
           link: 'qrcode',
-          img: require('./assets/card-sky.jpg')
+          // img: require('./assets/card-sky.jpg')
       }, {
           name: '系统/页面取色工具',
           desc: '对系统和页面取色',
           link: 'color',
-          img: require('./assets/card-sky.jpg')
+          // img: require('./assets/card-sky.jpg')
       }, {
           name: 'MarkDown',
           desc: 'MarkDown的编辑和预览',
           link: 'md',
-          img: require('./assets/card-sky.jpg')
+          // img: require('./assets/card-sky.jpg')
       }]
       }
   },

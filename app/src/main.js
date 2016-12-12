@@ -14,10 +14,10 @@ Vue.use(Resource)
 Vue.use(Router)
 Vue.use(VueMaterial)
 Vue.config.debug = true
-
+//@todo use theme then material element not effect
 Vue.material.theme.register('default', {
-  primary: 'indigo',
-  accent: 'pink'
+  primary: 'light-blue',
+  accent: 'light-blue'
 })
 
 const router = new Router({

@@ -13,7 +13,7 @@ const _ = require('lodash')
 
 const WINDOWS = process.platform === 'win32'
 const EOL = WINDOWS ? '\r\n' : '\n'
-const HOSTS = '/Users/shaofengliu/Desktop/hosts' || (WINDOWS ? 'C:/Windows/System32/drivers/etc/hosts' : '/etc/hosts')
+const HOSTS = 'D:/Users/sfliu/Desktop/hosts' || '/Users/shaofengliu/Desktop/hosts' || (WINDOWS ? 'C:/Windows/System32/drivers/etc/hosts' : '/etc/hosts')
 
 /**
  * get hostfile|path text sync
@@ -76,18 +76,17 @@ const saveHost = function (lines, cb) {
     originLines:'origin Line text Content'
  } */
 const fileByLine = function (path, commentsHost, commentsText, cb) {
-  var lines = [], originLines=[], texts = ''
+  var lines = [], originLines=[], texts = '', index=-1;
   if (typeof cb !== 'function') {
     texts = loadHost(path)
     texts.split(/\r?\n/).forEach(online)
     return {lines, texts, originLines}
   }
   cb = once(cb)
-  fs.createReadStream(path, { encoding: 'utf8' })
-    .pipe(split())
-    .pipe(through(online))
-    .on('close', function () {
-      cb(null, lines)
+  var rs = fs.createReadStream(path, { encoding: 'utf8' })
+  rs.pipe(split()).pipe(through(online))
+  rs.on('close', function () {
+      cb({lines, texts, originLines})
     })
     .on('error', cb)
 
@@ -95,9 +94,10 @@ const fileByLine = function (path, commentsHost, commentsText, cb) {
     return {index, ip,  host, switcher}
   }
 
-  function online (line, index) {
+  function online (line) {
+    index++;
+    texts+=(line+EOL);
     originLines.push(line);
-
     var pline = {}, matches, ip, host, switcher
     var lineSansComments = line.replace(/#.*/, '')
     matches = /^\s*?(.+?)\s+(.+?)$/.exec(lineSansComments)
@@ -158,8 +158,8 @@ const hostBanMng = function (lines) {
 const hostByDomain = function (lines) {
   var banIndexes = hostBanMng(lines)
   var group = _.groupBy(lines, line => {
-    if(!(banIndexes && banIndexes.length && line.index<=banIndexes[1] && line.index >= banIndexes[0])){
-      return line.host
+    if(line && line.host && !(banIndexes && banIndexes.length && line.index<=banIndexes[1] && line.index >= banIndexes[0])){
+      return _.trim(line.host)
     }
   })
   for(var k in group){
@@ -187,7 +187,7 @@ const hostByGroup = function (lines) {
     startLine = lines[section[0]]; section[0]++;
     name = _.trim(startLine.replace(mark, ''))
     list = _.slice(lines, section[0], section[1])
-    
+
     switcher = true; _.find(list, function (item) {
       if (item.host && item.ip && !item.switcher) switcher = false
     })

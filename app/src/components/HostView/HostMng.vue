@@ -18,7 +18,6 @@
     }
   }
 
-
   .host-list-sidebar{
     overflow: auto;
     display: block;
@@ -26,7 +25,7 @@
 
   .md-list-item {
     text-align: left;
-    .text-ip{ color: #3f51b5; width: 90px; margin-right: 20px; display: inline-block;}
+    .text-ip{ color: #03a9f4; width: 90px; margin-right: 20px; display: inline-block;}
     .text-host{ }
   }
   .host-list-expand{
@@ -34,7 +33,7 @@
       position: absolute;
       width: 20px;
       top: 10px;
-      right:20px;
+      right:10px;
     }
   }
 </style>
@@ -49,7 +48,7 @@
                 <span style="flex: 1">
                   <md-input-container>
                     <label>search host</label>
-                    <md-input placeholder="by domain/ip or group"></md-input>
+                    <md-input placeholder="filter by domain,ip,group" v-model="searchKeyWorks"></md-input>
                   </md-input-container>
                 </span>
                 <md-button class="md-icon-button">
@@ -70,7 +69,7 @@
             </md-avatar>
             <div class="md-list-text-container">
                 <span>{{group.name}}</span>
-                <p>Jan 9, 2014</p>
+                <p></p>
             </div>
 
             <md-list-expand class="host-list-expand">
@@ -80,16 +79,14 @@
                       <span class="text-ip">{{host.ip}}</span>
                       <span class="text-host">{{host.host}}<md-tooltip md-direction="top">{{host.host}}</md-tooltip></span>
                     </div>
-                    <div class="themed" v-md-theme="'green'">
-                      <md-checkbox v-model="host.switcher" @change="toggleHostByItem(on, host, group)" class="md-primary md-checkbox-host"></md-checkbox>
-                    </div>
+                    <md-checkbox v-model="host.switcher" @change="toggleHostByItem(on, host, group)" class="md-primary md-checkbox-host"></md-checkbox>
                 </md-list-item>
               </md-list>
             </md-list-expand>
 
             <md-switch v-model="group.switcher" :name="group.name" @click.stop.prevent="" @change="toggleHostByGroup(!group.switcher, group, $event)" ></md-switch>
         </md-list-item>
-        
+
         <md-subheader class="md-inset">按域名查看</md-subheader>
         <md-list-item v-for="(dlist, domain) in domains" class="host-list-group" @click="">
             <md-avatar class="md-avatar-icon">
@@ -97,9 +94,9 @@
             </md-avatar>
             <div class="md-list-text-container">
                 <span>{{domain}}</span>
-                <p>Jan 9, 2014</p>
+                <p></p>
             </div>
-            
+
             <md-list-expand class="host-list-expand">
               <md-list>
                 <md-list-item class="md-inset" v-for="host in dlist" @click="changeHostIp(host, dlist)">
@@ -116,6 +113,17 @@
 </template>
 
 <script>
+
+Object.filter = function( obj, predicate) {
+    var result = {}, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key) && predicate(key, obj[key])) {
+            result[key] = obj[key];
+        }
+    }
+    return result;
+};
+
 import doHost from '../../utils/host'
 export default {
   props:{
@@ -135,7 +143,8 @@ export default {
   data(){
     return {
       domains: [],
-      groups: []
+      groups: [],
+      searchKeyWorks: ''
     }
   },
   created(){
@@ -144,12 +153,22 @@ export default {
   watch:{
     hostdata(){
         this.updateHost()
+    },
+    searchKeyWorks(){
+       this.updateHost()
     }
   },
+
   methods:{
     updateHost(){
-      this.groups = doHost.hostByGroup(this.hostdata)
-      this.domains = doHost.hostByDomain(this.hostdata)
+      var self = this;
+      var kv = _.trim(self.searchKeyWorks);
+      this.groups = doHost.hostByGroup(this.hostdata).filter((group) => {
+          return kv ? (group.name.indexOf(kv) !== -1) : group
+      })
+      this.domains = Object.filter(doHost.hostByDomain(this.hostdata), function(host, list) {
+        return kv ? ((host.indexOf(kv) !== -1) || _.filter(list, itemhost => itemhost.ip.indexOf(kv)!==-1).length) : host;
+      })
       console.log(this.groups,   this.domains)
     },
     toggleHostByItem(on, host, group){
@@ -165,12 +184,16 @@ export default {
       return false;
     },
     changeHostIp(host, dlist){
-      dlist.forEach(item => {item.switcher = false})
-      host.switcher = true;
+      if(host.switcher){
+        host.switcher = false;
+        dlist['selected'] = ''
+      }else{
+        dlist.forEach(item => {item.switcher = false})
+        host.switcher = true;
+        dlist['selected'] = host.ip
+      }
       doHost.toggleHosts(dlist, this.originlines, ()=>this.$parent.updateFile())
-      dlist['selected'] = host.ip
       this.gotoLine(host.index, 0)
-      // console.log('domains', host, dlist)
     },
     gotoLine(line, column){
       this.$parent.$refs.editor.$refs.aceor.editor.gotoLine(line, column, true)
