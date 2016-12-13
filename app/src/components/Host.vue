@@ -39,7 +39,7 @@ const hostwiki = `
 <hr><pre>#127.0.0.1 localhost #注释</pre><hr>
 
 <h5>2. Host Group comments </h5>
-<hr><pre>#====
+<hr><pre>#==== HOST Group Name
 127.0.0.1 localhost
 127.0.0.2 test.com
 ====# </pre><hr>

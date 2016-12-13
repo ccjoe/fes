@@ -13,7 +13,7 @@ const _ = require('lodash')
 
 const WINDOWS = process.platform === 'win32'
 const EOL = WINDOWS ? '\r\n' : '\n'
-const HOSTS = 'D:/Users/sfliu/Desktop/hosts' || '/Users/shaofengliu/Desktop/hosts' || (WINDOWS ? 'C:/Windows/System32/drivers/etc/hosts' : '/etc/hosts')
+const HOSTS = /*'D:/Users/sfliu/Desktop/hosts' || */(WINDOWS ? 'C:/Windows/System32/drivers/etc/hosts' : '/etc/hosts')
 
 /**
  * get hostfile|path text sync
@@ -76,6 +76,7 @@ const saveHost = function (lines, cb) {
     originLines:'origin Line text Content'
  } */
 const fileByLine = function (path, commentsHost, commentsText, cb) {
+  console.log(path, 'HOST PATH')
   var lines = [], originLines=[], texts = '', index=-1;
   if (typeof cb !== 'function') {
     texts = loadHost(path)
@@ -211,7 +212,7 @@ const toggleHost = function (host, originLines, cb) {
       hasComment = _.startsWith(originText, '#')
   if((hasComment && !host.switcher) || !hasComment && host.switcher) return;
 
-  originLines[host.index] = originText.replace(/(^#)?([\S+\.]+)/, function(str, match, word){
+  originLines[host.index] = originText.replace(/(^#)?(.+)/, function(str, match, word){
    return match==='#' ? word : '#'+str
   })
   saveHost(originLines, cb)

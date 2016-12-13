@@ -62,7 +62,7 @@
     </md-whiteframe>
 
     <md-list class="md-double-line host-list-sidebar" :style="{height: height}">
-        <md-subheader class="md-inset">按组查看</md-subheader>
+        <md-subheader class="md-inset"  v-if="groups.length">按组查看</md-subheader>
         <md-list-item v-for="group in groups"  class="host-list-group">
             <md-avatar class="md-avatar-icon">
                 <md-icon>folder</md-icon>
@@ -87,7 +87,7 @@
             <md-switch v-model="group.switcher" :name="group.name" @click.stop.prevent="" @change="toggleHostByGroup(!group.switcher, group, $event)" ></md-switch>
         </md-list-item>
 
-        <md-subheader class="md-inset">按域名查看</md-subheader>
+        <md-subheader class="md-inset" v-if="domains">按域名查看</md-subheader>
         <md-list-item v-for="(dlist, domain) in domains" class="host-list-group" @click="">
             <md-avatar class="md-avatar-icon">
                 <md-icon>folder</md-icon>
@@ -169,7 +169,7 @@ export default {
       this.domains = Object.filter(doHost.hostByDomain(this.hostdata), function(host, list) {
         return kv ? ((host.indexOf(kv) !== -1) || _.filter(list, itemhost => itemhost.ip.indexOf(kv)!==-1).length) : host;
       })
-      console.log(this.groups,   this.domains)
+      // console.log(this.groups,   this.domains)
     },
     toggleHostByItem(on, host, group){
       host.switcher = !host.switcher;
@@ -196,7 +196,7 @@ export default {
       this.gotoLine(host.index, 0)
     },
     gotoLine(line, column){
-      this.$parent.$refs.editor.$refs.aceor.editor.gotoLine(line, column, true)
+      this.$parent.$refs.editor.$refs.aceor.editor.gotoLine(line+1, column, true)
     },
     toggleSidenav() {
       this.$refs.sidebar.toggle();

@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Electron from 'vue-electron'
 import Resource from 'vue-resource'
 import Router from 'vue-router'
+
+import './assets/css.css'
+import './assets/icon.css'
+
 // Vue Material
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'

@@ -47,11 +47,12 @@
       }
     },
     mounted(){
-      var vm = this, isStr, df = 'http://s.cn.bing.net/az/hprichbg/rb/AidlingerHoehe_ZH-CN11764360351_1024x768.jpg';
-      getBingImg('1024x768', (url) => {
-        isStr = typeof url === 'string'
+      var vm = this, isStr, cr, df = 'http://s.cn.bing.net/az/hprichbg/rb/AidlingerHoehe_ZH-CN11764360351_1024x768.jpg';
+      getBingImg('1024x768', (url, text) => {
+        isStr = typeof url === 'string', cr = document.getElementsByClassName('fes-copyright')
         console.log('Get Bing Url Is:' +  url);
         document.getElementsByTagName('body')[0].style.backgroundImage =  "url("+ (isStr ? url : df)+")"
+        if(cr && cr.length) cr[0].textContent =  text
       })
     }
   }
