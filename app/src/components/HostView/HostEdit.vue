@@ -25,12 +25,12 @@
 <template>
   <div class="host-editor-wrapper">
     <md-button  @click="saveHost" class="has-ripple md-fab md-raised md-warn md-fab-top-right md-save-host">
-      <md-ink-ripple></md-ink-ripple>
+      <md-tooltip md-direction="left">保存Editor(Ctrl/Command+S),Sidebar Change Auto Save</md-tooltip>
       <md-icon>save</md-icon>
     </md-button>
 
     <md-button  @click="$parent.openDialog('dialog')" class="md-mini has-ripple md-fab md-raised md-fab-top-right md-help-host">
-      <md-ink-ripple></md-ink-ripple>
+      <md-tooltip md-direction="left">HELP(帮助信息)</md-tooltip>
       <md-icon>help</md-icon>
     </md-button>
     <aceEditor ref="aceor" :content.sync="content" :onsave="saveHost"
@@ -69,8 +69,8 @@ export default {
       var success = doHost.saveHost(this.$refs.aceor.editor.getValue())
       if(success){
         this.$parent.updateFile()
+        this.$parent.openDialog('dialog', 'success', '保存成功！')
       }
-      this.$parent.openDialog('dialog', 'success', '保存成功！')
     }
   }
 }

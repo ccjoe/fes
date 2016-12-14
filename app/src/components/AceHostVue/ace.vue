@@ -64,25 +64,26 @@ export default {
     editor.on('change', function () {
       vm.$parent.$emit('editor-update', editor.getValue());
     });
-    editor.commands.addCommand([{
-      name: 'saveFile',
-      bindKey: {
-        win: 'Ctrl-S',
-        mac: 'Command-S'
-      },
-      exec: function(env, args, request) {
-        vm.onsave()
-      }
-    }, {
+    editor.commands.addCommands([{
         name: "find",
         bindKey: {
           win: 'Ctrl-F',
           mac: 'Command-F',
         },
         exec: function(editor) {
-            config.loadModule("brace/ext/searchbox", function(e) {e.Search(editor)});
+            ace.config.loadModule("ace/ext/searchbox", function(e) {e.Search(editor)});
         },
         readOnly: true
+    }, {
+      name: 'save',
+      bindKey: {
+        win: 'Ctrl-S',
+        mac: 'Command-S'
+      },
+      exec: function(env, args, request) {
+        console.log('ONSAVE, SAVE')
+        vm.onsave()
+      }
     }]);
     // this.editor.resize(true)
   },

@@ -36,23 +36,34 @@
       right:10px;
     }
   }
+  .md-toolbar .md-toolbar-container > .md-button:first-child{
+    margin-right: 0;
+  }
+
+  .md-avatar.md-avatar-icon .md-icon{
+    text-align: center;
+    vertical-align: middle;
+    line-height: 16px;
+    display: inline-block;
+  }
 </style>
 <template>
 <div class="complete-sidebar">
     <md-whiteframe md-elevation="3">
         <md-toolbar  v-md-theme="'light-blue'">
             <div class="md-toolbar-container">
-                <md-button class="md-icon-button">
-                    <md-icon>menu</md-icon>
-                </md-button>
+              <md-button class="md-icon-button">
+                  <md-icon>search</md-icon>
+              </md-button>
                 <span style="flex: 1">
                   <md-input-container>
                     <label>search host</label>
                     <md-input placeholder="filter by domain,ip,group" v-model="searchKeyWorks"></md-input>
                   </md-input-container>
                 </span>
-                <md-button class="md-icon-button">
-                    <md-icon>search</md-icon>
+                <md-button class="md-icon-button" @click="freshDNS">
+                    <md-icon>dns</md-icon>
+                    <md-tooltip md-direction="top">Refresh DNS(保存时会自动刷新)</md-tooltip>
                 </md-button>
                 <!-- <md-button class="md-icon-button">
                     <md-icon>view_module</md-icon>
@@ -65,7 +76,7 @@
         <md-subheader class="md-inset"  v-if="groups.length">按组查看</md-subheader>
         <md-list-item v-for="group in groups"  class="host-list-group">
             <md-avatar class="md-avatar-icon">
-                <md-icon>folder</md-icon>
+                <md-icon>{{group.name.charAt().toUpperCase()}}</md-icon>
             </md-avatar>
             <div class="md-list-text-container">
                 <span>{{group.name}}</span>
@@ -90,7 +101,7 @@
         <md-subheader class="md-inset" v-if="domains">按域名查看</md-subheader>
         <md-list-item v-for="(dlist, domain) in domains" class="host-list-group" @click="">
             <md-avatar class="md-avatar-icon">
-                <md-icon>folder</md-icon>
+                <md-icon>{{domain.charAt().toUpperCase()}}</md-icon>
             </md-avatar>
             <div class="md-list-text-container">
                 <span>{{domain}}</span>
@@ -125,6 +136,7 @@ Object.filter = function( obj, predicate) {
 };
 
 import doHost from '../../utils/host'
+import freshdns from '../../utils/freshdns'
 export default {
   props:{
     hostdata:{
@@ -170,6 +182,7 @@ export default {
         return kv ? ((host.indexOf(kv) !== -1) || _.filter(list, itemhost => itemhost.ip.indexOf(kv)!==-1).length) : host;
       })
       // console.log(this.groups,   this.domains)
+      this.freshDNS(false)
     },
     toggleHostByItem(on, host, group){
       host.switcher = !host.switcher;
@@ -200,6 +213,13 @@ export default {
     },
     toggleSidenav() {
       this.$refs.sidebar.toggle();
+    },
+    //showTips is true refresh silence
+    freshDNS(showTips){
+      let vmp = this.$parent
+      freshdns((stdout, stderr) => {
+        showTips && vmp.openDialog('dialog', 'Refresh DNS', stdout)
+      })
     }
   }
 }

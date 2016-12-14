@@ -18,6 +18,15 @@ MarkDown Viewer
 Dev PluginsTools For Fes
 ```
 
+## About Host
+```
+Host分组管理
+Host分域名管理
+Host Editor - Host文件高亮、语法检查高亮提示
+Host Filter/Search
+DNS Refresh Auto
+```
+
 ## Build Setup
 
 ``` bash
@@ -41,3 +50,12 @@ More information can be found [here](https://simulatedgreg.gitbooks.io/electron-
 ---
 
 This project was generated from [electron-vue](https://github.com/SimulatedGREG/electron-vue) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about this project can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
+
+Editor use [ace](https://ace.c9.io/)
+
+---
+
+### todolist
+- refresh browse dns cache [done]
+- icon and icon taskbar
+- github release  [done]

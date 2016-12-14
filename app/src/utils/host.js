@@ -87,6 +87,7 @@ const fileByLine = function (path, commentsHost, commentsText, cb) {
   var rs = fs.createReadStream(path, { encoding: 'utf8' })
   rs.pipe(split()).pipe(through(online))
   rs.on('close', function () {
+      texts = texts.replace(/\r?\n$/, "")
       cb({lines, texts, originLines})
     })
     .on('error', cb)
@@ -226,87 +227,8 @@ const toggleHosts = function (hosts, originLines, cb) {
   saveHost(originLines, cb)
 }
 
+const set = function () {
 
-const getGroup = function () {
-
-}
-
-const getDomain = function () {
-
-}
-
-/**
- * Add a rule to /etc/hosts. If the rule already exists, then this does nothing.
- * @param  {string}   ip
- * @param  {string}   host
- * @param  {function(Error)=} cb
- */
-const set = function (ip, host, cb) {
-  var didUpdate = false
-  if (typeof cb !== 'function') {
-    return _set(get(true))
-  }
-
-  get(true, function (err, lines) {
-    if (err) return cb(err)
-    _set(lines)
-  })
-
-  function _set (lines) {
-    // Try to update entry, if host already exists in file
-    lines = lines.map(mapFunc)
-
-    // If entry did not exist, let's add it
-    if (!didUpdate) {
-      // If the last line is empty, or just whitespace, then insert the new entry
-      // right before it
-      var lastLine = lines[lines.length - 1]
-      if (typeof lastLine === 'string' && /\s*/.test(lastLine)) {
-        lines.splice(lines.length - 1, 0, [ip, host])
-      } else {
-        lines.push([ip, host])
-      }
-    }
-
-    writeFile(lines, cb)
-  }
-
-  function mapFunc (line) {
-    if (Array.isArray(line) && line[1] === host) {
-      line[0] = ip
-      didUpdate = true
-    }
-    return line
-  }
-}
-
-/**
- * Remove a rule from /etc/hosts. If the rule does not exist, then this does
- * nothing.
- *
- * @param  {string}   ip
- * @param  {string}   host
- * @param  {function(Error)=} cb
- */
-const remove = function (ip, host, cb) {
-  if (typeof cb !== 'function') {
-    return _remove(get(true))
-  }
-
-  get(true, function (err, lines) {
-    if (err) return cb(err)
-    _remove(lines)
-  })
-
-  function _remove (lines) {
-    // Try to remove entry, if it exists
-    lines = lines.filter(filterFunc)
-    return writeFile(lines, cb)
-  }
-
-  function filterFunc (line) {
-    return !(Array.isArray(line) && line[0] === ip && line[1] === host)
-  }
 }
 
 export default {

@@ -11,7 +11,8 @@
     "vuex": "^2.0.0",
     "vue-material": "^0.4.1",
     "brace": "^0.9.0",
-    "lodash": "^4.17.2"
+    "lodash": "^4.17.2",
+    "iconv-lite":"^0.4.15"
   },
   "devDependencies": {},
   "author": "icareu.joe@gmail.com"

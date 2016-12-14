@@ -42,15 +42,15 @@ const hostwiki = `
 <hr><pre>#==== HOST Group Name
 127.0.0.1 localhost
 127.0.0.2 test.com
-====# </pre><hr>
+#==== </pre><hr>
 
 <h5>3. host block do not manage </h5>
-<hr><pre>#==== HIDE-ALL-OF-INNER
+<hr><pre>#==== HIDE_ALL_OF_INNER
 127.0.0.3 test3.com
 127.0.0.4 test4.com
 #====</pre><hr></div>
 <div class="key-tips">
-  <h5> editor keymap see: <a href="https://ace.c9.io/">https://ace.c9.io/</a></h5>
+  <h5> editor keymap see: <a href="https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts">https://ace.c9.io/</a></h5>
 </div>`
 
 export default {
@@ -91,6 +91,7 @@ export default {
         vm.hosts = lines   //mng show
         vm.originlines = originLines //mng for write
       })
+
     },
     setHeight(){
       var tabContentHeight = document.documentElement.clientHeight - 88;
@@ -111,10 +112,10 @@ export default {
       this.$refs[ref].close();
     },
     onOpen() {
-      console.log('Opened');
+      // console.log('Opened');
     },
     onClose(type) {
-      console.log('Closed', type);
+      // console.log('Closed', type);
     }
   }
 }
