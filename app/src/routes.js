@@ -5,15 +5,10 @@ export default [
     component: require('components/MainPane')
   },
   {
-    path: '/host',
-    name: 'host-page',
+    path: '/:id',
+    name: 'tab-page',
     component: require('components/TabPane')
   },
-  // {
-  //   path: '/image',
-  //   name: 'landing-page',
-  //   component: require('components/Image')
-  // },
   {
     path: '*',
     redirect: '/'

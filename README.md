@@ -2,6 +2,9 @@
 
 > frontend tools set
 
+## Download
+[Download Click 下载地址](https://github.com/ccjoe/fes/releases)
+
 ## HOSTS Demo
 [![Electron Logo](./docs/fes.gif)](fes example)
 
@@ -22,9 +25,11 @@ Dev PluginsTools For Fes
 ```
 Host分组管理
 Host分域名管理
-Host Editor - Host文件高亮、语法检查高亮提示
+定制的Host Editor - Host文件高亮、语法检查高亮提示
 Host Filter/Search
 DNS Refresh Auto
+Editor Theme Switch
+Bing background/ Change everyday
 ```
 
 ## Build Setup
@@ -32,16 +37,12 @@ DNS Refresh Auto
 ``` bash
 # install dependencies
 npm install
-
 # serve with hot reload at localhost:9080
 npm run dev
-
 # build electron app for production
 npm run build
-
 # lint all JS/Vue component files in `app/src`
 npm run lint
-
 # run webpack in production
 npm run pack
 ```
@@ -59,3 +60,11 @@ Editor use [ace](https://ace.c9.io/)
 - refresh browse dns cache [done]
 - icon and icon taskbar
 - github release  [done]
+
+- format language/ json/xml/js/css/html/... ...
+
+### ChangeLog
+```
+12/23 add editor more theme and more lang
+12/23 format json/xml/html/css/js/java
+```

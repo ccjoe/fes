@@ -21,7 +21,9 @@ Vue.config.debug = true
 //@todo use theme then material element not effect
 Vue.material.theme.register('default', {
   primary: 'light-blue',
-  accent: 'light-blue'
+  accent: 'pink',
+  warn: 'deep-orange',
+  background: 'grey'
 })
 
 const router = new Router({

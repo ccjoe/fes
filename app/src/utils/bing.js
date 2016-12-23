@@ -1,7 +1,9 @@
 const http = require('http')
 
 //'1024x768'
-const getImgSize = (url, size) => url.replace(/(.*_)(\d+x\d+)(\.jpg$)/, (str, m1, m2, m3) => m1+size+m3)
+const getImgSize = (url, size) => url.replace(/(.*_)(\d+x\d+)(\.jpg$)/, function(str, m1, m2, m3){
+   return !~url.indexOf('www.bing.com') ? ('http://www.bing.com/'+ m1+size+m3) : (m1+size+m3)
+})
 const getBingImg = function (size, cb) {
   http.get('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US',  (res)=> {
       var jstr = '', url='', urlinfo={}

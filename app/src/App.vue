@@ -5,7 +5,7 @@
     padding: 0;
   }
   html,
-  body { height: 100%; overflow: hidden;}
+  body { height: 100%; overflow: hidden; background-size:100% 100%!important;}
 
   body {
     align-items: center;
@@ -24,36 +24,23 @@
   .tools-card{
     width: 100%;
     height: 100%;
-    /*background: rgba(255,255,255,.6) url('http://lorempixel.com/1024/768/nightlife/') no-repeat center center;
-    background-size:100% 100%;*/
   }
 </style>
 
 <template>
-  <div class="tools-card" :style="'background:' + bgimg" v-md-theme="'default'">
+  <div class="tools-card" :style="'background-image:' + bgimg" v-md-theme="'default'">
     <router-view></router-view>
   </div>
 </template>
 
 <script>
   import store from 'src/vuex/store'
-  import getBingImg from './utils/bing'
-
   export default {
     store,
     data(){
       return {
         bgimg: ''
       }
-    },
-    mounted(){
-      var vm = this, isStr, cr, df = 'http://s.cn.bing.net/az/hprichbg/rb/AidlingerHoehe_ZH-CN11764360351_1024x768.jpg';
-      getBingImg('1024x768', (url, text) => {
-        isStr = typeof url === 'string', cr = document.getElementsByClassName('fes-copyright')
-        console.log('Get Bing Url Is:' +  url);
-        document.getElementsByTagName('body')[0].style.backgroundImage =  "url("+ (isStr ? url : df)+")"
-        if(cr && cr.length) cr[0].textContent =  text
-      })
     }
   }
 </script>

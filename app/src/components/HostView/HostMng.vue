@@ -48,9 +48,9 @@
   }
 </style>
 <template>
-<div class="complete-sidebar">
+  <div class="complete-sidebar">
     <md-whiteframe md-elevation="3">
-        <md-toolbar  v-md-theme="'light-blue'">
+        <md-toolbar>
             <div class="md-toolbar-container">
               <md-button class="md-icon-button">
                   <md-icon>search</md-icon>
@@ -90,7 +90,7 @@
                       <span class="text-ip">{{host.ip}}</span>
                       <span class="text-host">{{host.host}}<md-tooltip md-direction="top">{{host.host}}</md-tooltip></span>
                     </div>
-                    <md-checkbox v-model="host.switcher" @change="toggleHostByItem(on, host, group)" class="md-primary md-checkbox-host"></md-checkbox>
+                    <md-checkbox v-model="host.switcher" @change="toggleHostByItem(on, host, group)" class="md-checkbox-host"></md-checkbox>
                 </md-list-item>
               </md-list>
             </md-list-expand>
@@ -136,7 +136,7 @@ Object.filter = function( obj, predicate) {
 };
 
 import doHost from '../../utils/host'
-import freshdns from '../../utils/freshdns'
+import freshdns from '../../utils/dns'
 export default {
   props:{
     hostdata:{

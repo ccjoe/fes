@@ -9,7 +9,6 @@
 
 <script>
 const ace = require('brace');
-require('./ace-host.js');
 require('brace/theme/monokai');
 require('brace/ext/searchbox')
 
@@ -64,27 +63,6 @@ export default {
     editor.on('change', function () {
       vm.$parent.$emit('editor-update', editor.getValue());
     });
-    editor.commands.addCommands([{
-        name: "find",
-        bindKey: {
-          win: 'Ctrl-F',
-          mac: 'Command-F',
-        },
-        exec: function(editor) {
-            ace.config.loadModule("ace/ext/searchbox", function(e) {e.Search(editor)});
-        },
-        readOnly: true
-    }, {
-      name: 'save',
-      bindKey: {
-        win: 'Ctrl-S',
-        mac: 'Command-S'
-      },
-      exec: function(env, args, request) {
-        console.log('ONSAVE, SAVE')
-        vm.onsave()
-      }
-    }]);
     // this.editor.resize(true)
   },
 
@@ -94,14 +72,16 @@ export default {
         this.editor.setValue(newContent, 1);
       }
     },
-
-    theme: function (newTheme) {
-      this.editor.setTheme('ace/theme/' + newTheme);
-    }/*,
-
-    height: function (nw) {
-      this.editor.resize(true)
-    }*/
+    theme: function (theme) {
+      console.log(theme, 'theme')
+      var langMode = require('brace/theme/'+theme).Mode;
+      // this.editor.setTheme('ace/theme/' + theme); //format none
+      this.editor.setTheme(langMode);   //format
+    },
+    lang: function (lang) {
+      require('brace/mode/'+lang);
+      this.editor.getSession().setMode('ace/mode/' + lang);
+    }
   }
 };
 </script>
