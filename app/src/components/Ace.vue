@@ -61,6 +61,7 @@ export default {
     editor.setValue(vm.content, 1);
     editor.setShowPrintMargin(false);
     editor.on('change', function () {
+      console.log(editor.getValue())
       vm.$parent.$emit('editor-update', editor.getValue());
     });
     // this.editor.resize(true)
@@ -68,12 +69,12 @@ export default {
 
   watch: {
     content: function (newContent) {
+      console.log(newContent, 'newContent')
       if (this.sync) {
         this.editor.setValue(newContent, 1);
       }
     },
     theme: function (theme) {
-      console.log(theme, 'theme')
       var langMode = require('brace/theme/'+theme).Mode;
       // this.editor.setTheme('ace/theme/' + theme); //format none
       this.editor.setTheme(langMode);   //format

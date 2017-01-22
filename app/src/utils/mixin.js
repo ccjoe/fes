@@ -9,14 +9,13 @@ export default {
   },
   methods:{
     setHeight(){
-      console.log(this.$options.name)
       var tabContentHeight = document.documentElement.clientHeight - 108;
       var isFormat = this.$options.name === 'Format';
       var gap = isFormat ? 60 : 0;
       if(!isFormat) this.heightSideScroll = (tabContentHeight - 64) + 'px'
       this.height = (tabContentHeight - gap) + 'px'
     },
-    changeLang(selected){
+    changeLang(selected, text, min){
       this.lang = selected
     },
     changeTheme(selected){
